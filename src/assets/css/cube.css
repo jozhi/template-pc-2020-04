@@ -604,3 +604,14 @@ audio:not([controls]) {
 
 .fll{float: left;}
 .flr{float: right;}
+
+/* 文字单行显示，超出省略号 */
+.one-line{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 左侧菜单最宽值和最高值 */
+.side_max_width{width: 256px;}
+.side_min_width{width: 80px;}
