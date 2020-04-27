@@ -4,6 +4,13 @@ import Login from '../views/system/Login'
 import Home from '../views/Home'
 import Index from '../views/system/index'
 
+// 修复 vueRouter 3.1.0+ 重复跳转同一路由导致的控制台报错
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(VueRouter)
 const routes = [{
     path: '/',
