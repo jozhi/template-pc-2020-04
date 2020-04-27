@@ -601,3 +601,6 @@ audio:not([controls]) {
 [draggable] {
     cursor: move;
 }
+
+.fll{float: left;}
+.flr{float: right;}
