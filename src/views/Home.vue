@@ -11,15 +11,15 @@
 </template>
 
 <style lang="less" scoped>
-    .is-vertical {
-        height: 100vh;
-        overflow-y: auto;
-    }
+.is-vertical {
+  height: 100vh;
+  overflow-y: auto;
+}
 </style>
 
 <script>
-import Header from '@/components/Header.vue'
-import Sidebar from '@/components/Sidebar.vue'
+import Header from '@/components/Header.vue';
+import Sidebar from '@/components/Sidebar.vue';
 
 export default {
   name: 'Home',
@@ -29,8 +29,8 @@ export default {
   },
   computed: {
     isSidebar() {
-      return this.$store.getters.isSidebar
-    },
-  },
-}
+      return this.$store.getters.isSidebar;
+    }
+  }
+};
 </script>
