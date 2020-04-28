@@ -1,17 +1,13 @@
 module.exports = [{
-    'title': '参照模块',
-    'location': '/login',
-    'children': [{
-      'title': '测试子级路由',
-      'location': '/',
-      'children': [{
-        'title': 'about',
-        'location': '/about',
-      }]
-    }]
+    'title': '应用管理',
+    'location': '/AppManage'
   },
   {
-    'title': 'Home',
-    'location': '/Home',
+    'title': '应用详情',
+    'location': '/AppDetails'
+  },
+  {
+    'title': '表单编辑',
+    'location': '/AppFormEditor',
   }
 ]
