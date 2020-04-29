@@ -32,11 +32,6 @@
     width: 300px;
     float: right;
   }
-  .h1{
-    float: left;
-    font-weight: normal;
-    font-size: 26px;
-  }
 }
 .contPart{
   margin-bottom: 10px;
