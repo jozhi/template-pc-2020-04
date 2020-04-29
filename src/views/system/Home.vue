@@ -5,7 +5,11 @@
     </keep-alive>
     <el-container class="is-vertical" :style="isSidebar ? 'margin-left: 256px;' : 'margin-left: 80px;'">
       <Header></Header>
-      <router-view />
+      <div class="content">
+        <div class="innerPage">
+          <router-view />
+        </div>
+      </div>
     </el-container>
   </el-container>
 </template>
@@ -14,6 +18,18 @@
 .is-vertical {
   height: 100vh;
   overflow-y: auto;
+  background-color: #f1f2f5;
+}
+.content{
+  padding: 30px 20px;
+  text-align: left;
+}
+.innerPage{
+  padding: 30px 20px;
+  border-radius: 3px;
+  background-color: #fff;
+
+  min-height: calc(100vh - 180px);
 }
 </style>
 

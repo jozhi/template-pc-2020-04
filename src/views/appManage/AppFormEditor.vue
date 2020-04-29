@@ -1,5 +1,6 @@
 <template>
-  <div class="">
+  <div class="AppFormEditor">
+    
   </div>
 </template>
 
