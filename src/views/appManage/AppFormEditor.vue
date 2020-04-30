@@ -9,6 +9,7 @@
     </div>
     <div class="content">
       <div class="tool_btn">
+        <el-button size="small" @click="toConsole">打印</el-button>
         <el-button size="small">预览</el-button>
         <el-button size="small">保存</el-button>
         <el-button size="small" type="primary">下一步</el-button>
@@ -21,12 +22,15 @@
             <div class="fieldPart">
               <div class="fp_tit">基本字段</div>
               <div class="fp_cont cf">
-                <a href="javascript:;" class="item">单行文本</a>
-                <a href="javascript:;" class="item">多行文本</a>
-                <a href="javascript:;" class="item">单行文本</a>
-                <a href="javascript:;" class="item">多行文本</a>
-                <a href="javascript:;" class="item">单行文本</a>
-                <a href="javascript:;" class="item">多行文本</a>
+                <draggable
+                  class="dragArea list-group"
+                  :list="formFieldData"
+                  :group="{ name: 'people', pull: 'clone', put: false }"
+                  :clone="cloneDog"
+                  @change="log"
+                >
+                  <a href="javascript:;" v-for="element in formFieldData" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                </draggable>
               </div>
               <div class="fp_tit">增强字段</div>
               <div class="fp_cont cf">
@@ -44,10 +48,14 @@
             </div>
             <!-- 表单设计 - 工作台 -->
             <div class="formEditing">
-              
+              <draggable class="workbench list-group" v-bind="dragOptions" :list="formItemData" :clone="cloneDog2" group="people" @change="log2">
+                <div class="list-group-item" v-for="element in formItemData" :key="element.id">
+                  <span class="close" @click="listGroupItemClone(element)">✕</span>
+                  <strong class="title">{{ element.name }}</strong>
+                </div>
+              </draggable>
             </div>
           </div>
-          
         </el-tab-pane>
         <!-- End 表单设计 -->
 
@@ -64,113 +72,228 @@
 </template>
 
 <style lang="less" scope>
-  .titlePart .conterTitle{
+.titlePart .conterTitle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  a {
+    margin-right: -1px;
+    padding: 8px 20px;
+    line-height: 1;
+    border: 1px solid #e2e2e2;
+    background-color: #f5f5f5;
+    color: #666;
+  }
+  a.active,
+  a:hover {
+    position: relative;
+    background-color: #03a7f0;
+    color: #fff;
+  }
+}
+
+.content {
+  position: relative;
+  .tool_btn {
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    a{
-      margin-right: -1px;
-      padding: 8px 20px;
-      line-height: 1;
-      border: 1px solid #e2e2e2;
-      background-color: #f5f5f5;
-      color: #666;
-    }
-    a.active,a:hover{
-      position: relative;
-      background-color: #03a7f0;
-      color: #fff;
-    }
+    right: 0;
+    z-index: 1;
   }
-
-  .content{
-    position: relative;
-    .tool_btn{
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 1;
+  .el-tabs__header {
+    margin-bottom: 10px;
+  }
+}
+.formDesignWarp {
+  height: calc(100vh - 280px);
+  .fieldPart {
+    float: left;
+    width: 220px;
+    height: 100%;
+    .fp_tit {
+      font-size: 16px;
+      padding-bottom: 5px;
     }
-    .el-tabs__header{
+    .fp_cont {
       margin-bottom: 10px;
-    }
-  }
-  .formDesignWarp{
-    height: calc(100vh - 280px);
-    .fieldPart{
-      float: left;
-      width: 220px;
-      height: 100%;
-      .fp_tit{
-        font-size: 16px;
-        padding-bottom: 5px;
-      }
-      .fp_cont{
-        margin-bottom: 10px;
+      text-align: center;
+      .item {
+        float: left;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        width: 105px;
+        height: 30px;
+        line-height: 30px;
         text-align: center;
-        .item{
-          float: left;
-          margin-right: 5px;
-          margin-bottom: 5px;
-          width: 105px;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          font-size: 14px;
-          color: #333;
-          background-color: #f2f2f2;
-          &:nth-child(even){
-            margin-right: 0;
-          }
+        font-size: 14px;
+        color: #333;
+        background-color: #f2f2f2;
+        &:nth-child(even) {
+          margin-right: 0;
         }
       }
     }
-    .configPart{
-      float: right;
-      width: 200px;
-      padding: 0 10px;
-      height: 100%;
-      .el-tabs__nav{
-        margin-left: 30px;
-      }
-    }
-    .formEditing{
-      margin: 0 220px;
-      border: 1px solid #ddd;
-      height: 100%;
+  }
+  .configPart {
+    float: right;
+    width: 200px;
+    padding: 0 10px;
+    height: 100%;
+    .el-tabs__nav {
+      margin-left: 30px;
     }
   }
-  .fieldPart{}
-  .configPart{}
-  .formEditing{}
-
-
+  .formEditing {
+    margin: 0 220px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    height: 100%;
+    background-color: #f1f2f5;
+    .list-group {
+      height: 100%;
+      font-size: 0;
+      .list-group-item {
+        margin: 2px;
+        display: inline-block;
+        box-sizing: border-box;
+        // display: grid;
+        // width: 50%;
+        width: calc(50% - 4px);
+         
+        line-height: 50px;
+        font-size: 14px;
+        border: 1px solid #efefef;
+        background-color: #fefefe;
+      }
+    }
+  }
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.workbench{
+  
+  .list-group-item{
+    position: relative;
+    .close{
+      float: right;
+      width: 50px;
+      text-align: center;
+      cursor: pointer;
+      &:hover{
+        background-color: #e0f0fd;
+      }
+    }
+    .title{
+      padding-left: 10px;
+      display: inline-block;
+    }
+  }
+}
+.fieldPart {
+}
+.configPart {
+}
+.formEditing {
+}
 </style>
 
 
 <script>
+import draggable from 'vuedraggable';
+let idGlobal = 8;
 // @ is an alias to /src
 export default {
   name: 'Login',
-  data(){
+  components: {
+    draggable
+  },
+  data() {
     return {
-      conterTitleType:1,
-      activeName:'formDesign',
-      formConfigType:'cpField'
+      formFieldData: [
+        { name: '单行文本', id: 1 },
+        { name: '多行文本', id: 2 },
+        { name: '数字', id: 3 },
+        { name: '日期', id: 4 },
+        { name: '单选按钮组', id: 5 },
+        { name: '复选框组', id: 6 },
+        { name: '下拉框', id: 7 },
+        { name: '下拉复选框', id: 8 },
+        { name: '按钮', id: 9 },
+        { name: '地址', id: 10 },
+        { name: '定位', id: 11 },
+        { name: '图片', id: 12 },
+        { name: '附件', id: 13 },
+        { name: '超链接', id: 14 }
+      ],
+      formItemData: [
+        { name: '图片', id: 111 },
+        { name: '附件', id: 112 },
+        { name: '超链接', id: 113 }
+      ],
+      conterTitleType: 1,
+      activeName: 'formDesign',
+      formConfigType: 'cpField'
+    };
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost'
+      };
     }
   },
-  methods:{
-    changeConterTitleType(type){
-      this.conterTitleType = type
+  methods: {
+    log: function(evt) {
+      console.log('log', evt);
+    },
+    cloneDog(copy) {
+      console.log('cloneDog', copy);
+      return {
+        id: idGlobal++,
+        name: copy.name
+      };
+    },
+    log2: function(evt) {
+      console.log('log2', evt);
+    },
+    cloneDog2(copy) {
+      console.log('cloneDog2', copy);
+      return {
+        id: idGlobal++,
+        name: copy.name
+      };
+    },
+    toConsole(){
+      console.log('this.formItemData:',this.formItemData);
+    },
+
+    changeConterTitleType(type) {
+      this.conterTitleType = type;
       console.log(type);
     },
-    formConfigSwitch(component){
+    formConfigSwitch(component) {
       console.log(component);
       // this.formConfigType = type
     },
-    handleClick(component){
+    handleClick(component) {
       console.log(component);
+    },
+    listGroupItemClone(eleItem){
+      console.log('ele:',eleItem);
+      const self = this
+      this.formItemData.forEach(function(item,index){
+        console.log(item,index);
+        if(eleItem === item){
+          self.formItemData.splice(index,1)
+          console.log('bingo');
+        }
+      })
     }
   }
 };
