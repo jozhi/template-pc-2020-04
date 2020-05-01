@@ -228,6 +228,11 @@ export default {
         { name: '附件', id: 13 },
         { name: '超链接', id: 14 }
       ],
+      formFieldComplexData:[
+        { name: '子表单', id: 211 },
+        { name: '关联查询', id: 212 },
+        { name: '关联数据', id: 213 },
+      ],
       formItemData: [
         { name: '图片', id: 111 },
         { name: '附件', id: 112 },
