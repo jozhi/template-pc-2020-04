@@ -75,7 +75,13 @@
                 group="people"
                 @change="logWorkbench"
               >
-                <div class="list-group-item" v-for="element in formItemData" :key="element.id">
+                <div
+                  :class="['list-group-item',element.id === workbenchItemId && 'selected', element.type]"
+                  v-for="element in formItemData"
+                  :key="element.id"
+                  :data-type="JSON.stringify(element)"
+                  @click="workbenchItemClick"
+                >
                   <span class="close" @click="listGroupItemClone(element)">✕</span>
                   <strong class="title">{{ element.name }}</strong>
                 </div>
@@ -180,18 +186,23 @@
     .list-group {
       height: 100%;
       font-size: 0;
+      overflow-y: auto;
       .list-group-item {
         margin: 2px;
         display: inline-block;
         box-sizing: border-box;
-        // display: grid;
-        // width: 50%;
         width: calc(50% - 4px);
 
         line-height: 50px;
         font-size: 14px;
         border: 1px solid #efefef;
         background-color: #fefefe;
+      }
+      .selected{
+        background-color: #cfe1f3;
+      }
+      .list-group-item.Other {
+        width: calc(100% - 4px);
       }
     }
   }
@@ -218,55 +229,46 @@
     }
   }
 }
-.fieldPart {
-}
-.configPart {
-}
-.formEditing {
-}
 </style>
 
 
 <script>
 import draggable from 'vuedraggable';
-let idGlobal = 8;
 // @ is an alias to /src
 export default {
   name: 'Login',
   components: {
     draggable
-    // nestedDraggable
   },
   data() {
     return {
-      formField:null,
+      workbenchItemId:'',
+      formField: null,
       formFieldData: [
-        { name: '单行文本', id: 1, type: 'base'},
-        { name: '多行文本', id: 2, type: 'base'},
-        { name: '数字', id: 3, type: 'base'},
-        { name: '日期', id: 4, type: 'base'},
-        { name: '单选按钮组', id: 5, type: 'base'},
-        { name: '复选框组', id: 6, type: 'base'},
-        { name: '下拉框', id: 7, type: 'base'},
-        { name: '下拉复选框', id: 8, type: 'base'},
-        { name: '按钮', id: 9, type: 'base'},
-        { name: '地址', id: 10, type: 'base'},
-        { name: '定位', id: 11, type: 'base'},
-        { name: '图片', id: 12, type: 'base'},
-        { name: '附件', id: 13, type: 'base'},
-        { name: '超链接', id: 14, type: 'base'}
+        { name: '单行文本', id: 1, type: 'base' },
+        { name: '多行文本', id: 2, type: 'base' },
+        { name: '数字', id: 3, type: 'base' },
+        { name: '日期', id: 4, type: 'base' },
+        { name: '单选按钮组', id: 5, type: 'base' },
+        { name: '复选框组', id: 6, type: 'base' },
+        { name: '下拉框', id: 7, type: 'base' },
+        { name: '下拉复选框', id: 8, type: 'base' },
+        { name: '按钮', id: 9, type: 'base' },
+        { name: '地址', id: 10, type: 'base' },
+        { name: '定位', id: 11, type: 'base' },
+        { name: '图片', id: 12, type: 'base' },
+        { name: '附件', id: 13, type: 'base' },
+        { name: '超链接', id: 14, type: 'base' }
       ],
       formFieldDataAugmented: [
         { name: '子表单', id: 301, type: 'Augmented' },
         { name: '关联查询', id: 302, type: 'Augmented' }
       ],
-      formFieldDataOther: [
-        { name: '标签Tab', id: 401, type: 'Other' },
-      ],
+      formFieldDataOther: [{ name: '标签Tab', id: 401, type: 'Other' }],
       formItemData: [
-        { name: '单行文本', id: 1, type: 'base'},
-        { name: '多行文本', id: 2, type: 'base'},
-        { name: '数字', id: 3, type: 'base'},
+        { name: '单行文本', id: 1, type: 'base' },
+        { name: '多行文本', id: 2, type: 'base' },
+        { name: '数字', id: 3, type: 'base' }
       ],
       conterTitleType: 1,
       activeName: 'formDesign',
@@ -284,6 +286,12 @@ export default {
     }
   },
   methods: {
+    // 工作台点击元素
+    workbenchItemClick: function(evt) {
+      console.log('evt', JSON.parse(evt.target.dataset.type));
+      const type = JSON.parse(evt.target.dataset.type)
+      this.workbenchItemId = type.id
+    },
     // 基本字段
     log: function(evt) {
       console.log('log', evt);
@@ -293,7 +301,7 @@ export default {
       return {
         id: copy.id,
         name: copy.name,
-        type: copy.type,
+        type: copy.type
       };
     },
     // 增强字段
@@ -305,15 +313,16 @@ export default {
       return {
         id: copy.id,
         name: copy.name,
-        type: copy.type,
+        type: copy.type
       };
     },
     // 其他字段
     cloneDogOther(copy) {
       console.log('cloneDogOther', copy);
       return {
-        id: idGlobal++,
-        name: copy.name
+        id: copy.id,
+        name: copy.name,
+        type: copy.type
       };
     },
     logOther: function(evt) {
@@ -326,8 +335,9 @@ export default {
     cloneDogWorkbench(copy) {
       console.log('cloneDogWorkbench', copy);
       return {
-        id: idGlobal++,
-        name: copy.name
+        id: copy.id,
+        name: copy.name,
+        type: copy.type
       };
     },
 
@@ -350,13 +360,13 @@ export default {
 
     // 工作台删除item
     listGroupItemClone(eleItem) {
-      console.log('ele:', eleItem);
+      // console.log('ele:', eleItem);
       const self = this;
       this.formItemData.forEach(function(item, index) {
-        console.log(item, index);
+        // console.log(item, index);
         if (eleItem === item) {
           self.formItemData.splice(index, 1);
-          console.log('bingo');
+          // console.log('bingo');
         }
       });
     }
