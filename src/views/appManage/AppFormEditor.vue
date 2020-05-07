@@ -34,8 +34,27 @@
               </div>
               <div class="fp_tit">增强字段</div>
               <div class="fp_cont cf">
-                <a href="javascript:;" class="item">子表单</a>
-                <a href="javascript:;" class="item">关联查询</a>
+                <draggable
+                  class="dragArea list-group"
+                  :list="formFieldDataAugmented"
+                  :group="{ name: 'people', pull: 'clone', put: false }"
+                  :clone="cloneDogAugmented"
+                  @change="log"
+                >
+                  <a href="javascript:;" v-for="element in formFieldDataAugmented" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                </draggable>
+              </div>
+              <div class="fp_tit">其他字段</div>
+              <div class="fp_cont cf">
+                <draggable
+                  class="dragArea list-group"
+                  :list="formFieldDataOther"
+                  :group="{ name: 'people', pull: 'clone', put: false }"
+                  :clone="cloneDogOther"
+                  @change="logOther"
+                >
+                  <a href="javascript:;" v-for="element in formFieldDataOther" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                </draggable>
               </div>
             </div>
             <!-- 表单设计 - 字段属性 & 表单配置 -->
@@ -48,7 +67,14 @@
             </div>
             <!-- 表单设计 - 工作台 -->
             <div class="formEditing">
-              <draggable class="workbench list-group" v-bind="dragOptions" :list="formItemData" :clone="cloneDog2" group="people" @change="log2">
+              <draggable
+                class="workbench list-group"
+                v-bind="dragOptions"
+                :list="formItemData"
+                :clone="cloneDogWorkbench"
+                group="people"
+                @change="logWorkbench"
+              >
                 <div class="list-group-item" v-for="element in formItemData" :key="element.id">
                   <span class="close" @click="listGroupItemClone(element)">✕</span>
                   <strong class="title">{{ element.name }}</strong>
@@ -111,6 +137,7 @@
     float: left;
     width: 220px;
     height: 100%;
+    overflow-y: auto;
     .fp_tit {
       font-size: 16px;
       padding-bottom: 5px;
@@ -120,9 +147,9 @@
       text-align: center;
       .item {
         float: left;
-        margin-right: 5px;
+        margin-right: 5%;
         margin-bottom: 5px;
-        width: 105px;
+        width: 45%;
         height: 30px;
         line-height: 30px;
         text-align: center;
@@ -160,7 +187,7 @@
         // display: grid;
         // width: 50%;
         width: calc(50% - 4px);
-         
+
         line-height: 50px;
         font-size: 14px;
         border: 1px solid #efefef;
@@ -173,20 +200,19 @@
   opacity: 0.5;
   background: #c8ebfb;
 }
-.workbench{
-  
-  .list-group-item{
+.workbench {
+  .list-group-item {
     position: relative;
-    .close{
+    .close {
       float: right;
       width: 50px;
       text-align: center;
       cursor: pointer;
-      &:hover{
+      &:hover {
         background-color: #e0f0fd;
       }
     }
-    .title{
+    .title {
       padding-left: 10px;
       display: inline-block;
     }
@@ -209,34 +235,38 @@ export default {
   name: 'Login',
   components: {
     draggable
+    // nestedDraggable
   },
   data() {
     return {
+      formField:null,
       formFieldData: [
-        { name: '单行文本', id: 1 },
-        { name: '多行文本', id: 2 },
-        { name: '数字', id: 3 },
-        { name: '日期', id: 4 },
-        { name: '单选按钮组', id: 5 },
-        { name: '复选框组', id: 6 },
-        { name: '下拉框', id: 7 },
-        { name: '下拉复选框', id: 8 },
-        { name: '按钮', id: 9 },
-        { name: '地址', id: 10 },
-        { name: '定位', id: 11 },
-        { name: '图片', id: 12 },
-        { name: '附件', id: 13 },
-        { name: '超链接', id: 14 }
+        { name: '单行文本', id: 1, type: 'base'},
+        { name: '多行文本', id: 2, type: 'base'},
+        { name: '数字', id: 3, type: 'base'},
+        { name: '日期', id: 4, type: 'base'},
+        { name: '单选按钮组', id: 5, type: 'base'},
+        { name: '复选框组', id: 6, type: 'base'},
+        { name: '下拉框', id: 7, type: 'base'},
+        { name: '下拉复选框', id: 8, type: 'base'},
+        { name: '按钮', id: 9, type: 'base'},
+        { name: '地址', id: 10, type: 'base'},
+        { name: '定位', id: 11, type: 'base'},
+        { name: '图片', id: 12, type: 'base'},
+        { name: '附件', id: 13, type: 'base'},
+        { name: '超链接', id: 14, type: 'base'}
       ],
-      formFieldComplexData:[
-        { name: '子表单', id: 211 },
-        { name: '关联查询', id: 212 },
-        { name: '关联数据', id: 213 },
+      formFieldDataAugmented: [
+        { name: '子表单', id: 301, type: 'Augmented' },
+        { name: '关联查询', id: 302, type: 'Augmented' }
+      ],
+      formFieldDataOther: [
+        { name: '标签Tab', id: 401, type: 'Other' },
       ],
       formItemData: [
-        { name: '图片', id: 111 },
-        { name: '附件', id: 112 },
-        { name: '超链接', id: 113 }
+        { name: '单行文本', id: 1, type: 'base'},
+        { name: '多行文本', id: 2, type: 'base'},
+        { name: '数字', id: 3, type: 'base'},
       ],
       conterTitleType: 1,
       activeName: 'formDesign',
@@ -254,28 +284,56 @@ export default {
     }
   },
   methods: {
+    // 基本字段
     log: function(evt) {
       console.log('log', evt);
     },
     cloneDog(copy) {
       console.log('cloneDog', copy);
       return {
-        id: idGlobal++,
-        name: copy.name
+        id: copy.id,
+        name: copy.name,
+        type: copy.type,
       };
     },
-    log2: function(evt) {
-      console.log('log2', evt);
+    // 增强字段
+    logAugmented: function(evt) {
+      console.log('logAugmented', evt);
     },
-    cloneDog2(copy) {
-      console.log('cloneDog2', copy);
+    cloneDogAugmented(copy) {
+      console.log('cloneDogAugmented', copy);
+      return {
+        id: copy.id,
+        name: copy.name,
+        type: copy.type,
+      };
+    },
+    // 其他字段
+    cloneDogOther(copy) {
+      console.log('cloneDogOther', copy);
       return {
         id: idGlobal++,
         name: copy.name
       };
     },
-    toConsole(){
-      console.log('this.formItemData:',this.formItemData);
+    logOther: function(evt) {
+      console.log('logOther', evt);
+    },
+    // 工作台字段
+    logWorkbench: function(evt) {
+      console.log('logWorkbench', evt);
+    },
+    cloneDogWorkbench(copy) {
+      console.log('cloneDogWorkbench', copy);
+      return {
+        id: idGlobal++,
+        name: copy.name
+      };
+    },
+
+    // 打印
+    toConsole() {
+      console.log('this.formItemData:', this.formItemData);
     },
 
     changeConterTitleType(type) {
@@ -289,16 +347,18 @@ export default {
     handleClick(component) {
       console.log(component);
     },
-    listGroupItemClone(eleItem){
-      console.log('ele:',eleItem);
-      const self = this
-      this.formItemData.forEach(function(item,index){
-        console.log(item,index);
-        if(eleItem === item){
-          self.formItemData.splice(index,1)
+
+    // 工作台删除item
+    listGroupItemClone(eleItem) {
+      console.log('ele:', eleItem);
+      const self = this;
+      this.formItemData.forEach(function(item, index) {
+        console.log(item, index);
+        if (eleItem === item) {
+          self.formItemData.splice(index, 1);
           console.log('bingo');
         }
-      })
+      });
     }
   }
 };
