@@ -18,18 +18,13 @@
         <!-- 表单设计 -->
         <el-tab-pane label="表单设计" name="formDesign">
           <div class="formDesignWarp">
+            
             <!-- 表单设计 - 字段列表 -->
             <div class="fieldPart">
               <div class="fp_tit">基本字段</div>
               <div class="fp_cont cf">
-                <draggable
-                  class="dragArea list-group"
-                  :list="formFieldData"
-                  :group="{ name: 'people', pull: 'clone', put: false }"
-                  :clone="cloneDog"
-                  @change="log"
-                >
-                  <a href="javascript:;" v-for="element in formFieldData" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                <draggable class="dragArea list-group" :list="formFieldData" :group="{ name: 'people', pull: 'clone', put: false }" :clone="cloneDog">
+                  <div v-for="element in formFieldData" :key="element.id" class="item list-group-item">{{ element.name }}</div>
                 </draggable>
               </div>
               <div class="fp_tit">增强字段</div>
@@ -39,32 +34,31 @@
                   :list="formFieldDataAugmented"
                   :group="{ name: 'people', pull: 'clone', put: false }"
                   :clone="cloneDogAugmented"
-                  @change="log"
                 >
-                  <a href="javascript:;" v-for="element in formFieldDataAugmented" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                  <div v-for="element in formFieldDataAugmented" :key="element.id" class="item list-group-item">{{ element.name }}</div>
                 </draggable>
               </div>
               <div class="fp_tit">其他字段</div>
               <div class="fp_cont cf">
-                <draggable
-                  class="dragArea list-group"
-                  :list="formFieldDataOther"
-                  :group="{ name: 'people', pull: 'clone', put: false }"
-                  :clone="cloneDogOther"
-                  @change="logOther"
-                >
-                  <a href="javascript:;" v-for="element in formFieldDataOther" :key="element.id" class="item list-group-item">{{ element.name }}</a>
+                <draggable class="dragArea list-group" :list="formFieldDataOther" :group="{ name: 'people', pull: 'clone', put: false }" :clone="cloneDogOther">
+                  <div v-for="element in formFieldDataOther" :key="element.id" class="item list-group-item">{{ element.name }}</div>
                 </draggable>
               </div>
             </div>
+
+
             <!-- 表单设计 - 字段属性 & 表单配置 -->
             <div class="configPart">
               <el-tabs v-model="formConfigType" @tab-click="formConfigSwitch">
-                <el-tab-pane label="字段" name="cpField">字段</el-tab-pane>
+                <el-tab-pane label="字段" name="cpField">
+                  <FieldSettings :data="selectedField" @updateField="updateFieldFn"></FieldSettings>
+                </el-tab-pane>
                 <el-tab-pane label="表单" name="cpForm">表单</el-tab-pane>
                 <el-tab-pane label="接口" name="cpInterface">接口</el-tab-pane>
               </el-tabs>
             </div>
+
+
             <!-- 表单设计 - 工作台 -->
             <div class="formEditing">
               <draggable
@@ -76,13 +70,13 @@
                 @change="logWorkbench"
               >
                 <div
-                  :class="['list-group-item',element.id === workbenchItemId && 'selected', element.type]"
+                  :class="['list-group-item',element.globalIndex === selectedField.globalIndex && 'selected', element.type]"
                   v-for="element in formItemData"
-                  :key="element.id"
+                  :key="element.globalIndex"
                   :data-type="JSON.stringify(element)"
                   @click="workbenchItemClick"
                 >
-                  <span class="close" @click="listGroupItemClone(element)">✕</span>
+                  <span class="close" @click="deleteItem(element)">✕</span>
                   <strong class="title">{{ element.name }}</strong>
                 </div>
               </draggable>
@@ -138,7 +132,7 @@
   }
 }
 .formDesignWarp {
-  height: calc(100vh - 280px);
+  height: calc(100vh - 255px);
   .fieldPart {
     float: left;
     width: 220px;
@@ -170,11 +164,20 @@
   }
   .configPart {
     float: right;
-    width: 200px;
-    padding: 0 10px;
+    width: 210px;
+    padding-left: 10px;
     height: 100%;
-    .el-tabs__nav {
-      margin-left: 30px;
+    .el-tabs {
+      height: 100%;
+      .el-tabs__nav {
+        margin-left: 30px;
+      }
+      .el-tabs__content {
+        height: calc(100% - 50px);
+        .el-tab-pane {
+          height: 100%;
+        }
+      }
     }
   }
   .formEditing {
@@ -198,10 +201,10 @@
         border: 1px solid #efefef;
         background-color: #fefefe;
       }
-      .selected{
+      .selected {
         background-color: #cfe1f3;
       }
-      .list-group-item.Other {
+      .list-group-item.DividingLine {
         width: calc(100% - 4px);
       }
     }
@@ -234,83 +237,93 @@
 
 <script>
 import draggable from 'vuedraggable';
-// @ is an alias to /src
+import FieldSettings from '@/components/FieldSettings.vue';
+
+let globalIndex = 0;
 export default {
   name: 'Login',
   components: {
-    draggable
+    draggable,
+    FieldSettings
   },
   data() {
     return {
-      workbenchItemId:'',
-      formField: null,
+      selectedField: {}, // 工作台当前选中的字段
+      formItemData: [], // 工作台所有字段
+
       formFieldData: [
-        { name: '单行文本', id: 1, type: 'base' },
-        { name: '多行文本', id: 2, type: 'base' },
-        { name: '数字', id: 3, type: 'base' },
-        { name: '日期', id: 4, type: 'base' },
-        { name: '单选按钮组', id: 5, type: 'base' },
-        { name: '复选框组', id: 6, type: 'base' },
-        { name: '下拉框', id: 7, type: 'base' },
-        { name: '下拉复选框', id: 8, type: 'base' },
-        { name: '按钮', id: 9, type: 'base' },
-        { name: '地址', id: 10, type: 'base' },
-        { name: '定位', id: 11, type: 'base' },
-        { name: '图片', id: 12, type: 'base' },
-        { name: '附件', id: 13, type: 'base' },
-        { name: '超链接', id: 14, type: 'base' }
+        { name: '单行文本', id: 1, type: 'SingleLineText' },
+        { name: '多行文本', id: 2, type: 'MultilineText' },
+        { name: '数字', id: 3, type: 'Digital' },
+        { name: '日期', id: 4, type: 'Date' },
+        { name: '单选按钮组', id: 5, type: 'RadioButton' },
+        { name: '复选框组', id: 6, type: 'CheckboxGroup' },
+        { name: '下拉框', id: 7, type: 'Drop-downBox' },
+        { name: '下拉复选框', id: 8, type: 'Drop-downCheckbox' },
+        { name: '按钮', id: 9, type: 'Button' },
+        { name: '地址', id: 10, type: 'Address' },
+        { name: '定位', id: 11, type: 'Positioning' },
+        { name: '图片', id: 12, type: 'Image' },
+        { name: '附件', id: 13, type: 'Annex' },
+        { name: '超链接', id: 14, type: 'Hyperlinks' }
       ],
       formFieldDataAugmented: [
-        { name: '子表单', id: 301, type: 'Augmented' },
-        { name: '关联查询', id: 302, type: 'Augmented' }
+        { name: '子表单', id: 301, type: 'Subform' },
+        { name: '关联查询', id: 302, type: 'RelatedQuery' }
       ],
-      formFieldDataOther: [{ name: '标签Tab', id: 401, type: 'Other' }],
-      formItemData: [
-        { name: '单行文本', id: 1, type: 'base' },
-        { name: '多行文本', id: 2, type: 'base' },
-        { name: '数字', id: 3, type: 'base' }
-      ],
-      conterTitleType: 1,
-      activeName: 'formDesign',
-      formConfigType: 'cpField'
+      formFieldDataOther: [{ name: '分割线', id: 401, type: 'DividingLine' }],
+
+      conterTitleType: 1, // 切换 基础设置 & 数据管理
+      activeName: 'formDesign', // 切换 表单设计 & 表单发布 & 数据权限
+      formConfigType: 'cpField' // 切换字段设置   字段 & 表单 & 接口
     };
   },
   computed: {
     dragOptions() {
-      return {
-        animation: 200,
-        group: 'description',
-        disabled: false,
-        ghostClass: 'ghost'
-      };
+      return { animation: 200, group: 'description', disabled: false, ghostClass: 'ghost' };
     }
   },
   methods: {
     // 工作台点击元素
     workbenchItemClick: function(evt) {
       console.log('evt', JSON.parse(evt.target.dataset.type));
-      const type = JSON.parse(evt.target.dataset.type)
-      this.workbenchItemId = type.id
+      const type = JSON.parse(evt.target.dataset.type);
+      const self = this
+      // 绑定数据源
+      this.formItemData.forEach(function(item) {
+        if (type.id === item.id) {
+          // console.log(item, index);
+          self.selectedField = item;
+        }
+      });
+
+
+      // get请求
+      const params = {}
+      this.$api.get('/url',params).then(data => {
+        console.log(data);
+      })
+      // post请求
+      this.$api.post('/url',params).then(data => {
+        console.log(data);
+      })
+
     },
     // 基本字段
-    log: function(evt) {
-      console.log('log', evt);
-    },
     cloneDog(copy) {
       console.log('cloneDog', copy);
       return {
+        globalIndex: globalIndex++,
         id: copy.id,
         name: copy.name,
         type: copy.type
       };
     },
     // 增强字段
-    logAugmented: function(evt) {
-      console.log('logAugmented', evt);
-    },
     cloneDogAugmented(copy) {
       console.log('cloneDogAugmented', copy);
       return {
+        globalIndex: globalIndex++,
         id: copy.id,
         name: copy.name,
         type: copy.type
@@ -320,20 +333,18 @@ export default {
     cloneDogOther(copy) {
       console.log('cloneDogOther', copy);
       return {
+        globalIndex: globalIndex++,
         id: copy.id,
         name: copy.name,
         type: copy.type
       };
     },
-    logOther: function(evt) {
-      console.log('logOther', evt);
-    },
     // 工作台字段
     logWorkbench: function(evt) {
-      console.log('logWorkbench', evt);
+      console.log('logWorkbench', JSON.stringify(evt));
     },
     cloneDogWorkbench(copy) {
-      console.log('cloneDogWorkbench', copy);
+      console.log('cloneDogWorkbench', JSON.stringify(copy));
       return {
         id: copy.id,
         name: copy.name,
@@ -341,25 +352,33 @@ export default {
       };
     },
 
+    updateFieldFn(obj) {
+      console.log('updateFieldFn', obj);
+    },
+
     // 打印
     toConsole() {
       console.log('this.formItemData:', this.formItemData);
     },
 
+    // 切换 基础设置 & 数据管理
     changeConterTitleType(type) {
       this.conterTitleType = type;
       console.log(type);
     },
+    // 切换 表单设计 & 表单发布 & 数据权限
     formConfigSwitch(component) {
       console.log(component);
       // this.formConfigType = type
     },
+
+    // 切换字段设置  字段 & 表单 & 接口
     handleClick(component) {
       console.log(component);
     },
 
     // 工作台删除item
-    listGroupItemClone(eleItem) {
+    deleteItem(eleItem) {
       // console.log('ele:', eleItem);
       const self = this;
       this.formItemData.forEach(function(item, index) {

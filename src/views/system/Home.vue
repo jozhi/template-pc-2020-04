@@ -21,15 +21,15 @@
   background-color: #f1f2f5;
 }
 .content{
-  padding: 30px 20px;
+  padding: 30px 20px 20px;
   text-align: left;
 }
 .innerPage{
-  padding: 30px 20px;
+  padding: 30px 20px 20px;
   border-radius: 3px;
   background-color: #fff;
 
-  min-height: calc(100vh - 180px);
+  min-height: calc(100vh - 160px);
 }
 </style>
 
