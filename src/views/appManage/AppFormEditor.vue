@@ -24,7 +24,7 @@
               <div class="fp_tit">基本字段</div>
               <div class="fp_cont cf">
                 <draggable class="dragArea list-group" :list="formFieldData" :group="{ name: 'people', pull: 'clone', put: false }" :clone="cloneDog">
-                  <div v-for="element in formFieldData" :key="element.id" class="item list-group-item">{{ element.name }}</div>
+                  <div v-for="element in formFieldData" :key="element.id" :class="['item', 'list-group-item', element.type]">{{ element.name }}</div>
                 </draggable>
               </div>
               <div class="fp_tit">增强字段</div>
@@ -35,13 +35,13 @@
                   :group="{ name: 'people', pull: 'clone', put: false }"
                   :clone="cloneDogAugmented"
                 >
-                  <div v-for="element in formFieldDataAugmented" :key="element.id" class="item list-group-item">{{ element.name }}</div>
+                  <div v-for="element in formFieldDataAugmented" :key="element.id" :class="['item', 'list-group-item', element.type]">{{ element.name }}</div>
                 </draggable>
               </div>
               <div class="fp_tit">其他字段</div>
               <div class="fp_cont cf">
                 <draggable class="dragArea list-group" :list="formFieldDataOther" :group="{ name: 'people', pull: 'clone', put: false }" :clone="cloneDogOther">
-                  <div v-for="element in formFieldDataOther" :key="element.id" class="item list-group-item">{{ element.name }}</div>
+                  <div v-for="element in formFieldDataOther" :key="element.id" :class="['item', 'list-group-item', element.type]"> {{ element.name }}</div>
                 </draggable>
               </div>
             </div>
@@ -298,15 +298,16 @@ export default {
       });
 
 
-      // get请求
-      const params = {}
-      this.$api.get('/url',params).then(data => {
-        console.log(data);
-      })
-      // post请求
-      this.$api.post('/url',params).then(data => {
-        console.log(data);
-      })
+      // 注释冗余
+      // // get请求
+      // const params = {}
+      // this.$api.get('/url',params).then(data => {
+      //   console.log(data);
+      // })
+      // // post请求
+      // this.$api.post('/url',params).then(data => {
+      //   console.log(data);
+      // })
 
     },
     // 基本字段
