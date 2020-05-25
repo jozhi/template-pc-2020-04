@@ -47,6 +47,9 @@
 </template>
 
 <style lang="less" scope>
+.test{
+  
+}
 .AppDetails {
   position: relative;
 
