@@ -1,24 +1,5 @@
-# 自定义表单系统
+# 模板表单系统
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+左侧栏收缩之后也可以 hover 出菜单
+添加 tabs 页签
+url 后跟 ?onlyPage=true 只显示页面模块内页

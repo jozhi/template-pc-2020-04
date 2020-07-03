@@ -1,7 +1,7 @@
 <template>
   <div class="loginPage">
     <div class="form-content">
-      <h1>自定义表单系统</h1>
+      <h1>模板系统</h1>
       <el-form label-width="0" ref="ruleForm" :model="ruleForm" :rules="rules" class="ruleForm">
         <el-form-item prop="name">
           <el-input v-model="ruleForm.name" auto-complete="off" placeholder="请输入用户名"></el-input>
