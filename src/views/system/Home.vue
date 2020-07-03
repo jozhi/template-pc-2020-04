@@ -5,6 +5,7 @@
     </keep-alive>
     <el-container class="is-vertical" :style="isSidebar ? 'margin-left: 256px;' : 'margin-left: 80px;'">
       <Header></Header>
+      <Tabs></Tabs>
       <div class="content">
         <div class="innerPage">
           <router-view />
@@ -21,11 +22,11 @@
   background-color: #f1f2f5;
 }
 .content{
-  padding: 30px 20px 20px;
+  padding: 20px 15px 15px;
   text-align: left;
 }
 .innerPage{
-  padding: 30px 20px 20px;
+  padding: 15px;
   border-radius: 3px;
   background-color: #fff;
 
@@ -35,13 +36,15 @@
 
 <script>
 import Header from '@/components/Header.vue';
+import Tabs from '@/components/Tabs.vue';
 import Sidebar from '@/components/Sidebar.vue';
 
 export default {
   name: 'Home',
   components: {
     Header,
-    Sidebar
+    Sidebar,
+    Tabs
   },
   computed: {
     isSidebar() {
