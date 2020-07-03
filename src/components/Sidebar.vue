@@ -5,9 +5,9 @@
       <h1>模板系统</h1>
     </div>
     <div class="ep-menu">
-      <el-scrollbar v-if="isSidebar" class="ep-scrollbar">
+      <el-scrollbar class="ep-scrollbar">
         <!-- S 一级菜单 -->
-        <ul class="ep-menu-body">
+        <ul class="ep-menu-body" :style="isSidebar ? 'width: 256px;' : 'width: 80px;'">
           <template v-for="(item, index) in menus">
             <li :class="['ep-submenu', (selIndex === index && selTwoIndex === -1) && 'selectedItemBgc']" :key="index" @click="handleClick(index, item)">
               <div class="ep-submenu__title">
@@ -59,6 +59,7 @@
       </el-scrollbar>
       <!--</el-scrollbar>-->
     </div>
+    <div class="ep-sidebar-bg" :style="isSidebar ? 'width: 256px;' : 'width: 80px;'"></div>
   </div>
 </template>
 
@@ -165,6 +166,8 @@ export default {
   background-color: #333;
   transition: width 0.1s;
   .ep-logo {
+    position: relative;
+    z-index: 2;
     height: 64px;
     line-height: 64px;
     overflow: hidden;
@@ -187,6 +190,8 @@ export default {
     }
   }
   .ep-menu {
+    position: relative;
+    z-index: 2;
     height: calc(100vh - 64px);
     .ep-scrollbar {
       height: calc(100vh);
@@ -212,6 +217,10 @@ export default {
     .ep-submenu {
       position: relative;
       border-radius: 5px;
+
+      .el-icon-menu{
+        margin-right: 3px;
+      }
       &__title {
         height: 46px;
         line-height: 46px;
@@ -226,5 +235,26 @@ export default {
       }
     }
   }
+}
+
+.ep-sidebar-bg {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+  position: absolute;
+  // background: url(/static/img/sidebar.jpg) no-repeat center center / cover;
+}
+.ep-sidebar-bg:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  display: block;
+  opacity: .2;
+  position: absolute;
+  background: #000;
 }
 </style>
