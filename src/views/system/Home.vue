@@ -1,11 +1,14 @@
 <template>
   <el-container>
-    <keep-alive>
+    <keep-alive v-if="!onlyPage">
       <Sidebar></Sidebar>
     </keep-alive>
-    <el-container class="is-vertical" :style="isSidebar ? 'margin-left: 256px;' : 'margin-left: 80px;'">
-      <Header></Header>
-      <Tabs></Tabs>
+    <el-container 
+      :class="['is-vertical', onlyPage?'onlyPage':'']"
+      :style="onlyPage? 'margin-left: 0;' : isSidebar ? 'margin-left: 256px;' : 'margin-left: 80px;'"
+    >
+      <Header v-if="!onlyPage"></Header>
+      <Tabs v-if="!onlyPage"></Tabs>
       <div class="content">
         <div class="innerPage">
           <router-view />
@@ -20,6 +23,18 @@
   height: 100vh;
   overflow-y: auto;
   background-color: #f1f2f5;
+}
+.onlyPage{
+  >.content{
+    padding: 0 10px 10px;
+    margin: 15px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+
+    >.innerPage{
+      padding: 15px 10px 10px;
+    }
+  }
 }
 .content{
   padding: 20px 15px 15px;
@@ -50,6 +65,11 @@ export default {
     isSidebar() {
       return this.$store.getters.isSidebar;
     }
+  },
+  data:function() {
+    return {
+      onlyPage:this.$route.query.onlyPage
+    };
   }
 };
 </script>
