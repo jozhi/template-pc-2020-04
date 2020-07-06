@@ -45,7 +45,7 @@
   border-radius: 3px;
   background-color: #fff;
 
-  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 176px);
 }
 </style>
 
