@@ -2,7 +2,7 @@
   <div class="sidebarFastPhoto">
     <div class="ep-aside" :style="isSidebar ? 'width: 256px;' : 'width: 80px;'">
       <div class="ep-logo">
-        <img src="../assets/logo.png" alt />
+        <img src="../../assets/logo.png" alt />
         <h1>模板系统</h1>
       </div>
       <div class="ep-menu">
@@ -112,7 +112,7 @@
 
 <script type="es6">
 import qs from 'qs';
-import onlineLeftMenu from '../mock/onlineLeftMenu';
+import onlineLeftMenu from '../../mock/onlineLeftMenu';
 
 // const leftMenuData = (function() {
 //   let sysLeftMenuData = sessionStorage.getItem('sysLeftMenuData') && JSON.parse(sessionStorage.getItem('sysLeftMenuData'))

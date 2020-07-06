@@ -247,7 +247,7 @@ export default {
     .ep-prev-icon {
       width: 20px;
       height: 20px;
-      background: url(../assets/prev_icon.png) no-repeat;
+      background: url(../../assets/prev_icon.png) no-repeat;
       display: inline-block;
       background-size: 100%;
       cursor: pointer;
@@ -258,7 +258,7 @@ export default {
     .ep-next-icon {
       width: 20px;
       height: 20px;
-      background: url(../assets/next_icon.png) no-repeat;
+      background: url(../../assets/next_icon.png) no-repeat;
       display: inline-block;
       background-size: 100%;
       cursor: pointer;

@@ -50,9 +50,9 @@
 </style>
 
 <script>
-import Header from '@/components/Header.vue';
-import Tabs from '@/components/Tabs.vue';
-import Sidebar from '@/components/Sidebar.vue';
+import Header from '../section/Header.vue';
+import Tabs from '../section/Tabs.vue';
+import Sidebar from '../section/Sidebar.vue';
 
 export default {
   name: 'Home',

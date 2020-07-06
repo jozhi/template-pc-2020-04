@@ -8,9 +8,9 @@ VueRouter.prototype.push = function push(location, onResolve, onReject) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-import Login from '../views/system/Login'
-import Home from '../views/system/Home'
-import Index from '../views/system/index'
+import Login from '../basicModule/system/Login'
+import Home from '../basicModule/system/Home'
+import Index from '../basicModule/system/index'
 
 import AppManageRouter from '../views/appManage/AppManage.route'
 
