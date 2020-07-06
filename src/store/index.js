@@ -6,11 +6,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // 左侧栏展开收缩
     isSidebar: true,
+    // header部分，菜单页签功能
     menu: sessionStorage.getItem('menu') ? qs.parse(sessionStorage.getItem('menu')) : [],
   },
   mutations: {
-    // 设置左侧展开收缩
+    // 设置左侧栏展开收缩
     SET_SIDEBAR(state, value) {
       state.isSidebar = value
     },
