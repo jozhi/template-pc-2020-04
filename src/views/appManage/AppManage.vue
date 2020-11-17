@@ -8,6 +8,7 @@
     </div>
     <div class="contPart">
       <a class="creatApp" href="#"><i class="el-icon-plus"></i> 创建应用</a>
+      <div> <svg-icon class="svgIcon" icon-class="icon_tuichu" ></svg-icon></div>
     </div>
   </div>
 </template>
@@ -30,6 +31,11 @@
     color: #02A7F0;
     font-size: 18px;
   }
+}
+.svgIcon{
+  width: 30px;
+  height: 30px;
+  color: #666;
 }
 </style>
 
