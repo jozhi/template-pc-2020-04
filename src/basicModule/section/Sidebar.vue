@@ -3,7 +3,7 @@
     <div class="ep-aside" :style="isSidebar ? 'width: 256px;' : 'width: 80px;'">
       <div class="ep-logo">
         <img src="../../assets/logo.png" alt />
-        <h1>模板系统</h1>
+        <h1 v-show="isSidebar">模板系统</h1>
       </div>
       <div class="ep-menu">
         <!-- S 一级菜单 -->

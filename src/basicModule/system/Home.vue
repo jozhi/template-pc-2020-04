@@ -10,7 +10,8 @@
       <Header v-if="!onlyPage"></Header>
       <Tabs v-if="!onlyPage"></Tabs>
       <div class="content">
-        <div class="innerPage">
+        <div 
+        :class="['innerPage', onlyPage?'innerPageOnly':'']">
           <router-view />
         </div>
       </div>
@@ -46,6 +47,9 @@
   background-color: #fff;
 
   min-height: calc(100vh - 176px);
+}
+.innerPageOnly{
+  min-height: calc(100vh - 65px);
 }
 </style>
 

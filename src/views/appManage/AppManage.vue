@@ -13,7 +13,9 @@
 </template>
 
 <style lang="less" scope>
-.AppManage{}
+.AppManage{
+  height: 100%;
+}
 .titlePart {
   .searchBox{
     width: 300px;
