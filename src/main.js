@@ -8,11 +8,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 // 引用 svg 图标组件
 import './svg-icons'
+
+// 公共样式
 import './assets/css/cube.css';
 import './assets/css/page.css';
 import * as api from './api/index'
-Vue.use(ElementUI)
 
+Vue.use(ElementUI)
 
 Vue.prototype.$api = api    // 数据请求方法
 Vue.config.productionTip = false

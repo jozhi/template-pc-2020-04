@@ -1,6 +1,7 @@
 // package文件中获取版本号
 process.env.VUE_APP_Version = require('./package.json').version
 
+// 生成时间戳
 const NowDate = new Date();
 const NowTime = `${NowDate.getFullYear()}-${NowDate.getMonth() + 1}-${NowDate.getDate()}__${NowDate.getHours()}:${NowDate.getMinutes()}:${NowDate.getSeconds()}`
 
